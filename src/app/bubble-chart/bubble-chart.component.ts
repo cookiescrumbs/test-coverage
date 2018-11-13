@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { chartDataSets } from '../chart-data-sets';
+import { ChartService } from '../chart.service';
 import { Chart } from 'chart.js';
+
 
 @Component({
   selector: 'app-bubble-chart',
@@ -9,36 +10,21 @@ import { Chart } from 'chart.js';
 })
 export class BubbleChartComponent implements OnInit {
   @ViewChild('bubbleChart') private chartRef;
-  chart: Chart;
+  private chart: Chart;
+  private chartData: Chart.ChartData;
+  private chartOptions: Chart.ChartOptions;
+
+  constructor(private chartService: ChartService) {
+    this.chartData = chartService.chartData;
+    this.chartOptions = chartService.chartOptions;
+  }
 
   ngOnInit() {
     this.chart = new Chart(this.chartRef.nativeElement,
       {
         type: 'bubble',
-        data: chartDataSets,
-        options: {
-          title: {
-            display: true,
-            text: 'Automated, Manual & Total number of Requirements per Domain'
-          }, scales: {
-            yAxes: [{
-              scaleLabel: {
-                display: true,
-                labelString: 'Manual'
-              }
-            }],
-            xAxes: [{
-              scaleLabel: {
-                display: true,
-                labelString: 'Automated'
-              }
-            }]
-          },
-          legend: {
-            display: true,
-            position: 'bottom'
-          }
-        }
+        data: this.chartData,
+        options: this.chartOptions
       });
   }
 
